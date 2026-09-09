@@ -66,10 +66,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   // Load saved settings & user data on mount / user change
   useEffect(() => {
     try {
-      const savedTheme = (localStorage.getItem('qrixeva_theme') || localStorage.getItem('qrnova_theme')) as ThemeMode | null;
+      const savedTheme = localStorage.getItem('qrixeva_theme') as ThemeMode | null;
       if (savedTheme) setThemeState(savedTheme);
 
-      const savedAccent = (localStorage.getItem('qrixeva_accent') || localStorage.getItem('qrnova_accent')) as AccentColor | null;
+      const savedAccent = localStorage.getItem('qrixeva_accent') as AccentColor | null;
       if (savedAccent) setAccentState(savedAccent);
 
       // Fetch user's specific QR codes from API
