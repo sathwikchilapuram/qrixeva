@@ -5,7 +5,7 @@ import { QRCustomization } from '@/types';
 /**
  * Downloads SVG file directly
  */
-export function downloadSVG(svgString: string, filename: string = 'qrverse-code.svg') {
+export function downloadSVG(svgString: string, filename: string = 'qrixeva-code.svg') {
   const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -23,7 +23,7 @@ export function downloadSVG(svgString: string, filename: string = 'qrverse-code.
 export async function downloadRasterImage(
   svgString: string,
   format: 'png' | 'jpg' = 'png',
-  filename: string = 'qrverse-code.png',
+  filename: string = 'qrixeva-code.png',
   width: number = 1000
 ): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -77,8 +77,8 @@ export async function downloadRasterImage(
  */
 export async function downloadQRPDF(
   svgString: string,
-  title: string = 'QRVerse Digital QR Pass',
-  filename: string = 'qrverse-code.pdf'
+  title: string = 'Qrixeva Digital QR Pass',
+  filename: string = 'qrixeva-code.pdf'
 ) {
   const doc = new jsPDF({
     orientation: 'portrait',
@@ -92,11 +92,11 @@ export async function downloadQRPDF(
 
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(22);
-  doc.text('QRVerse', 20, 22);
+  doc.text('Qrixeva', 20, 22);
 
   doc.setFontSize(10);
   doc.setTextColor(161, 161, 170);
-  doc.text('Universal Dynamic QR Experience Platform', 20, 30);
+  doc.text('Create. Customize. Connect.', 20, 30);
 
   // Document Title
   doc.setTextColor(24, 24, 27);

@@ -14,7 +14,7 @@ export function Footer() {
           <div className="md:col-span-2 space-y-4">
             <Logo size="lg" />
             <p className="text-sm text-gray-500 max-w-sm">
-              QRVerse is the universal dynamic QR code platform enabling creators, enterprises, and businesses to build customizable, trackable QR experiences.
+              Qrixeva is the universal dynamic QR code platform enabling creators, enterprises, and businesses to build customizable, trackable QR experiences.
             </p>
             <div className="flex items-center gap-4 text-gray-400">
               <a href="https://github.com" target="_blank" rel="noreferrer" className="hover:text-brand-500 transition">
@@ -36,7 +36,6 @@ export function Footer() {
               <li><Link href="/#features" className="hover:text-brand-500 transition">Features</Link></li>
               <li><Link href="/#qr-types" className="hover:text-brand-500 transition">QR Types</Link></li>
               <li><Link href="/#dynamic-qr" className="hover:text-brand-500 transition">Dynamic QR</Link></li>
-              <li><Link href="/dashboard/templates" className="hover:text-brand-500 transition">Templates</Link></li>
               <li><Link href="/ai-assistant" className="hover:text-brand-500 transition">AI Assistant</Link></li>
             </ul>
           </div>

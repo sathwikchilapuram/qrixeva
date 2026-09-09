@@ -6,33 +6,41 @@ interface LogoProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   showText?: boolean;
   className?: string;
+  variant?: 'auto' | 'light' | 'dark';
 }
 
-export function Logo({ size = 'md', showText = true, className = '' }: LogoProps) {
-  const sizeMap = {
-    sm: 'w-7 h-7 text-lg',
-    md: 'w-9 h-9 text-xl',
-    lg: 'w-12 h-12 text-2xl',
-    xl: 'w-16 h-16 text-4xl',
+export function Logo({ size = 'md', showText = true, className = '', variant = 'auto' }: LogoProps) {
+  const textSizeMap = {
+    sm: 'text-lg',
+    md: 'text-xl',
+    lg: 'text-2xl sm:text-3xl',
+    xl: 'text-4xl sm:text-5xl',
   };
 
   const svgSizes = {
     sm: 28,
     md: 36,
-    lg: 48,
-    xl: 64,
+    lg: 44,
+    xl: 60,
   };
 
   const dim = svgSizes[size];
 
+  const textColorClass =
+    variant === 'light'
+      ? 'text-white'
+      : variant === 'dark'
+      ? 'text-gray-900'
+      : 'text-gray-900 dark:text-white';
+
   return (
     <div className={`inline-flex items-center gap-3 select-none ${className}`}>
-      <div className="relative group cursor-pointer">
+      <div className="relative group cursor-pointer shrink-0">
         {/* Ambient Glow */}
         <div className="absolute -inset-1 bg-gradient-to-r from-brand-500 via-indigo-500 to-purple-600 rounded-xl blur-sm opacity-70 group-hover:opacity-100 transition duration-300"></div>
 
         {/* Logo Container */}
-        <div className={`relative flex items-center justify-center bg-gray-950 border border-gray-800 rounded-xl p-1.5 shadow-xl`}>
+        <div className="relative flex items-center justify-center bg-gray-950 border border-gray-800 rounded-xl p-1.5 shadow-xl">
           <svg
             width={dim}
             height={dim}
@@ -88,12 +96,11 @@ export function Logo({ size = 'md', showText = true, className = '' }: LogoProps
       </div>
 
       {showText && (
-        <div className="flex flex-col">
-          <span className={`font-extrabold tracking-tight font-sans text-gray-900 dark:text-white ${sizeMap[size]}`}>
-            QR<span className="bg-gradient-to-r from-brand-500 via-indigo-500 to-purple-500 bg-clip-text text-transparent">Verse</span>
-          </span>
-        </div>
+        <span className={`font-extrabold tracking-tight font-sans leading-none ${textColorClass} ${textSizeMap[size]}`}>
+          Qrix<span className="bg-gradient-to-r from-brand-500 via-indigo-500 to-purple-500 bg-clip-text text-transparent">eva</span>
+        </span>
       )}
     </div>
   );
 }
+

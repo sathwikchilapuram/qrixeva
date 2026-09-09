@@ -69,7 +69,7 @@ export async function analyzeQRIntent(userPrompt: string): Promise<AIRecommendat
         name: 'Alex Rivera',
         title: 'Senior Software Architect',
         bio: 'Passionate about building scalable distributed web applications.',
-        resumeUrl: 'https://qrverse.app/demo-resume.pdf',
+        resumeUrl: 'https://qrixeva.vercel.app/demo-resume.pdf',
       }
     };
   }
@@ -131,7 +131,7 @@ export async function analyzeQRIntent(userPrompt: string): Promise<AIRecommendat
     title: 'Universal Digital Bio & Contact Hub',
     reasoning: 'Consolidate all your digital touchpoints (website, social profiles, contact info, portfolio) into one dynamic bio link.',
     suggestedFields: [
-      { key: 'name', label: 'Full Name / Brand Name', placeholder: 'e.g. QRVerse Enterprise', required: true },
+      { key: 'name', label: 'Full Name / Brand Name', placeholder: 'e.g. Qrixeva Enterprise', required: true },
       { key: 'bio', label: 'Short Description', placeholder: 'Brief overview...', required: true },
       { key: 'phone', label: 'Contact Phone', placeholder: '+1 (555) 000-0000', required: false },
     ],

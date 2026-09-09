@@ -1,4 +1,4 @@
-// Prisma schema for QRVerse Platform
+// Prisma schema for Qrixeva Platform
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -10,16 +10,28 @@ generator client {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String?
-  avatarUrl String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(uuid())
+  phone        String   @unique
+  email        String?  @unique
+  name         String
+  passwordHash String
+  avatarUrl    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   qrCodes   QRCode[]
   files     StoredFile[]
   profile   UserProfile?
+}
+
+model OtpCode {
+  id        String   @id @default(uuid())
+  phone     String
+  codeHash  String
+  expiresAt DateTime
+  attempts  Int      @default(0)
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
 }
 
 model QRCode {

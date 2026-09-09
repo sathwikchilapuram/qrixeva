@@ -37,13 +37,9 @@ export function GlobalSearchModal() {
     ? files.filter((f) => f.name.toLowerCase().includes(q) || f.type.toLowerCase().includes(q))
     : [];
 
-  const matchedTemplates = q
-    ? QR_TEMPLATES.filter((t) => t.name.toLowerCase().includes(q) || t.category.toLowerCase().includes(q) || t.description.toLowerCase().includes(q))
-    : [];
-
   const profileMatch = q && (profile.name.toLowerCase().includes(q) || profile.title.toLowerCase().includes(q) || 'profile'.includes(q)) ? profile : null;
 
-  const totalResults = matchedQRs.length + matchedFiles.length + matchedTemplates.length + (profileMatch ? 1 : 0);
+  const totalResults = matchedQRs.length + matchedFiles.length + (profileMatch ? 1 : 0);
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
@@ -53,7 +49,7 @@ export function GlobalSearchModal() {
           <Search className="w-5 h-5 text-gray-400 shrink-0" />
           <input
             type="text"
-            placeholder="Search QR codes, files, templates, profiles... (e.g. 'resume', 'menu')"
+            placeholder="Search QR codes, files, profiles... (e.g. 'resume', 'menu')"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="w-full bg-transparent border-none text-white text-base focus:outline-none placeholder-gray-500"
@@ -72,7 +68,7 @@ export function GlobalSearchModal() {
           {!q && (
             <div className="text-center py-8 text-gray-500">
               <Search className="w-10 h-10 mx-auto mb-2 opacity-40" />
-              <p className="text-sm">Type a search term to find QRVerse resources.</p>
+              <p className="text-sm">Type a search term to find Qrixeva resources.</p>
               <p className="text-xs text-gray-600 mt-1">Try "resume", "menu", "pdf", or "template"</p>
             </div>
           )}
@@ -141,32 +137,7 @@ export function GlobalSearchModal() {
           )}
 
           {/* Matched Templates */}
-          {matchedTemplates.length > 0 && (
-            <div>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2 px-2 flex items-center gap-2">
-                <LayoutTemplate className="w-3.5 h-3.5 text-purple-400" />
-                QR Templates ({matchedTemplates.length})
-              </h4>
-              <div className="space-y-1">
-                {matchedTemplates.map((tpl) => (
-                  <button
-                    key={tpl.id}
-                    onClick={() => {
-                      setSearchOpen(false);
-                      router.push('/dashboard/templates');
-                    }}
-                    className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-gray-800/70 transition text-left group"
-                  >
-                    <div>
-                      <p className="font-semibold text-white group-hover:text-purple-400 transition">{tpl.name}</p>
-                      <p className="text-xs text-gray-400">{tpl.category} Category • {tpl.description}</p>
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-gray-500 group-hover:text-white transition" />
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
+
 
           {/* Matched Profile */}
           {profileMatch && (

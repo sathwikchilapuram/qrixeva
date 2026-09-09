@@ -16,6 +16,12 @@ export type QRType =
   | 'audio'
   | 'video'
   | 'payment'
+  | 'email'
+  | 'phone'
+  | 'sms'
+  | 'whatsapp'
+  | 'wifi'
+  | 'upi'
   | 'app'
   | 'custom';
 

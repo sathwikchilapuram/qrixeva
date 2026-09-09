@@ -5,11 +5,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Logo } from '../branding/Logo';
 import { useApp } from '@/lib/AppContext';
+import { useAuth } from '@/lib/AuthContext';
 import { AccentColor } from '@/types';
-import { Search, Sun, Moon, Laptop, Plus, Sparkles, Palette, Menu, X, ArrowRight } from 'lucide-react';
+import { Search, Sun, Moon, Laptop, Plus, Sparkles, Palette, Menu, X, ArrowRight, LogIn, LogOut, User } from 'lucide-react';
 
 export function Navbar() {
   const { theme, setTheme, accent, setAccent, setSearchOpen } = useApp();
+  const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [accentMenuOpen, setAccentMenuOpen] = useState(false);
   const pathname = usePathname();
@@ -45,9 +47,6 @@ export function Navbar() {
 
             <Link href="/#dynamic-qr" className="hover:text-brand-500 transition">
               Dynamic QR
-            </Link>
-            <Link href="/dashboard/templates" className="hover:text-brand-500 transition">
-              Templates
             </Link>
             <Link href="/ai-assistant" className="flex items-center gap-1.5 text-brand-500 font-semibold hover:opacity-80 transition">
               <Sparkles className="w-4 h-4 animate-pulse" />
@@ -129,22 +128,42 @@ export function Navbar() {
             </button>
           </div>
 
-          {/* Primary CTA */}
-          <Link
-            href="/dashboard/create"
-            className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-medium text-sm transition shadow-lg shadow-brand-500/20 active:scale-95"
-          >
-            <Plus className="w-4 h-4" />
-            Create QR
-          </Link>
+          {/* Primary CTA & Account State */}
+          {user ? (
+            <>
+              <Link
+                href="/dashboard/create"
+                className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-medium text-sm transition shadow-lg shadow-brand-500/20 active:scale-95"
+              >
+                <Plus className="w-4 h-4" />
+                Create QR
+              </Link>
 
-          {!isDashboard && (
+              {!isDashboard && (
+                <Link
+                  href="/dashboard"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900 transition text-sm font-medium"
+                >
+                  My Dashboard
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              )}
+
+              <button
+                onClick={() => logout()}
+                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 transition text-xs font-semibold"
+                title="Logout of Account"
+              >
+                <LogOut className="w-3.5 h-3.5" /> Logout
+              </button>
+            </>
+          ) : (
             <Link
-              href="/dashboard"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900 transition text-sm font-medium"
+              href="/login"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-sm transition shadow-lg shadow-brand-500/20 active:scale-95"
             >
-              Dashboard
-              <ArrowRight className="w-3.5 h-3.5" />
+              <LogIn className="w-4 h-4" />
+              Login / Sign Up
             </Link>
           )}
 
@@ -183,28 +202,42 @@ export function Navbar() {
             Dynamic QR
           </Link>
           <Link
-            href="/dashboard/templates"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-gray-600 dark:text-gray-300 font-medium"
-          >
-            Templates
-          </Link>
-          <Link
             href="/ai-assistant"
             onClick={() => setMobileMenuOpen(false)}
             className="block py-2 text-brand-500 font-semibold"
           >
             AI Assistant Studio
           </Link>
-          <div className="pt-2">
-            <Link
-              href="/dashboard/create"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-brand-500 text-white font-medium text-sm shadow-md"
-            >
-              <Plus className="w-4 h-4" />
-              Create QR Code
-            </Link>
+
+          <div className="pt-2 border-t border-gray-100 dark:border-gray-900 space-y-2">
+            {user ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-brand-500 text-white font-medium text-sm shadow-md"
+                >
+                  <User className="w-4 h-4" /> My Dashboard
+                </Link>
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    logout();
+                  }}
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-rose-500/30 text-rose-400 font-medium text-sm"
+                >
+                  <LogOut className="w-4 h-4" /> Logout ({user.name})
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-brand-500 text-white font-medium text-sm shadow-md"
+              >
+                <LogIn className="w-4 h-4" /> Login / Sign Up
+              </Link>
+            )}
           </div>
         </div>
       )}

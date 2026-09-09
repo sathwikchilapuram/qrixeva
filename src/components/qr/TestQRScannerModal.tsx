@@ -132,7 +132,7 @@ export function TestQRScannerModal({
             </div>
 
             <div className="pt-2 border-t border-gray-900 text-[11px] text-gray-500 font-mono truncate">
-              Payload: {payload}
+              Scanned QR Data: {payload}
             </div>
           </div>
         )}

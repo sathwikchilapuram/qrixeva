@@ -13,23 +13,40 @@ export default function FilesPage() {
   const router = useRouter();
   const [uploading, setUploading] = useState(false);
 
-  const handleSimulatedUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileObj = e.target.files?.[0];
     if (!fileObj) return;
 
     setUploading(true);
-    setTimeout(() => {
+    try {
+      const formData = new FormData();
+      formData.append('file', fileObj);
+
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const json = await res.json();
+      const storageUrl = json.data?.storageUrl || URL.createObjectURL(fileObj);
+
       addFile({
         id: 'file-' + Date.now(),
         name: fileObj.name,
         type: fileObj.type || 'application/octet-stream',
         size: fileObj.size,
-        storageUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+        storageUrl: storageUrl,
         downloads: 0,
         createdAt: new Date().toISOString(),
       });
+
+      addToast('success', `File "${fileObj.name}" uploaded successfully!`);
+    } catch (err) {
+      console.error(err);
+      addToast('error', 'File upload failed');
+    } finally {
       setUploading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -53,7 +70,7 @@ export default function FilesPage() {
             <label className="px-5 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-semibold text-sm transition shadow-lg shadow-brand-500/20 flex items-center gap-2 cursor-pointer self-start">
               <Upload className="w-4 h-4" />
               {uploading ? 'Uploading...' : 'Upload New File'}
-              <input type="file" onChange={handleSimulatedUpload} className="hidden" />
+              <input type="file" onChange={handleFileUpload} className="hidden" />
             </label>
           </div>
 
@@ -79,7 +96,7 @@ export default function FilesPage() {
                 <div className="pt-4 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
                   <button
                     onClick={() => {
-                      router.push(`/dashboard/create?type=file`);
+                      router.push(`/dashboard/create?type=file&url=${encodeURIComponent(file.storageUrl)}`);
                     }}
                     className="px-3 py-1.5 rounded-xl bg-brand-500/10 text-brand-500 hover:bg-brand-500 hover:text-white font-semibold text-xs transition flex items-center gap-1.5"
                   >

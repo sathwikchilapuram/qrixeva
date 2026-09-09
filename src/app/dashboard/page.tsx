@@ -7,7 +7,7 @@ import { Sidebar } from '@/components/layout/Sidebar';
 import { MobileNav } from '@/components/layout/MobileNav';
 import { useApp } from '@/lib/AppContext';
 import { generateQRSVG } from '@/lib/qr-generator';
-import { downloadSVG, downloadRasterImage, copyQRImageToClipboard } from '@/lib/export-utils';
+import { downloadSVG, downloadRasterImage, downloadQRPDF, copyQRImageToClipboard } from '@/lib/export-utils';
 import {
   QrCode,
   CheckCircle,
@@ -41,10 +41,11 @@ export default function DashboardPage() {
 
   const handleOpenPreview = async (qr: any) => {
     setPreviewQr(qr);
-    const svg = await generateQRSVG(
-      qr.mode === 'dynamic' ? `https://qrverse.app/x/${qr.slug}` : (qr.content?.url || qr.name),
-      qr.customization
-    );
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? window.location.origin : 'https://qrixeva.vercel.app');
+    const payloadStr = qr.mode === 'dynamic'
+      ? `${baseUrl}/x/${qr.slug}`
+      : (qr.type === 'text' ? (qr.content?.text || qr.name) : (qr.content?.url || qr.content?.text || qr.name));
+    const svg = await generateQRSVG(payloadStr, qr.customization);
     setPreviewSvg(svg);
   };
 
@@ -274,17 +275,24 @@ export default function DashboardPage() {
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => downloadSVG(previewSvg, `${previewQr.slug}.svg`)}
-                className="py-2.5 px-4 rounded-xl bg-gray-800 hover:bg-gray-700 text-xs font-semibold text-white border border-gray-700 transition"
+                className="py-2.5 px-4 rounded-xl bg-gray-800 hover:bg-gray-700 text-xs font-bold text-white border border-gray-700 transition"
               >
                 Download SVG (Vector)
               </button>
               <button
                 onClick={() => downloadRasterImage(previewSvg, 'png', `${previewQr.slug}.png`)}
-                className="py-2.5 px-4 rounded-xl bg-brand-500 hover:bg-brand-600 text-xs font-semibold text-white transition shadow"
+                className="py-2.5 px-4 rounded-xl bg-brand-500 hover:bg-brand-600 text-xs font-bold text-white transition shadow"
               >
                 Download PNG
               </button>
             </div>
+
+            <button
+              onClick={() => downloadQRPDF(previewSvg, previewQr.name, `${previewQr.slug}.pdf`)}
+              className="w-full py-2.5 rounded-xl border border-gray-800 bg-gray-950 hover:bg-gray-800 text-xs font-bold text-gray-300 hover:text-white transition"
+            >
+              Download PDF Pass
+            </button>
           </div>
         </div>
       )}

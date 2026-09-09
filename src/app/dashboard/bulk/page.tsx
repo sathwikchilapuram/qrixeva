@@ -20,7 +20,7 @@ interface GeneratedBatchItem {
 export default function BulkQRGeneratorPage() {
   const { addToast } = useApp();
   const [bulkInput, setBulkInput] = useState(
-    "https://qrverse.app/menu\nhttps://qrverse.app/resume\nhttps://qrverse.app/contact\nhttps://qrverse.app/event"
+    "https://qrixeva.vercel.app/menu\nhttps://qrixeva.vercel.app/resume\nhttps://qrixeva.vercel.app/contact\nhttps://qrixeva.vercel.app/event"
   );
   const [generating, setGenerating] = useState(false);
   const [items, setItems] = useState<GeneratedBatchItem[]>([]);
@@ -145,7 +145,7 @@ export default function BulkQRGeneratorPage() {
                 <div className="p-12 text-center border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-3xl text-gray-500">
                   <Layers className="w-10 h-10 mx-auto mb-2 opacity-40" />
                   <p className="text-sm font-medium">No batch generated yet.</p>
-                  <p className="text-xs text-gray-600 mt-1">Enter target payloads on the left and click Generate.</p>
+                  <p className="text-xs text-gray-600 mt-1">Enter target links or text on the left and click Generate Batch.</p>
                 </div>
               )}
             </div>

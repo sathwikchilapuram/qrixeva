@@ -4,7 +4,7 @@ import { QRCustomization } from '@/types';
 /**
  * Generates raw matrix data from payload string
  */
-export async function getQRMatrix(payload: string, ecl: 'L' | 'M' | 'Q' | 'H' = 'Q') {
+export async function getQRMatrix(payload: string, ecl: 'L' | 'M' | 'Q' | 'H' = 'M') {
   const qr = QRCode.create(payload, { errorCorrectionLevel: ecl });
   const modules = qr.modules;
   const size = modules.size;
@@ -21,10 +21,82 @@ export async function getQRMatrix(payload: string, ecl: 'L' | 'M' | 'Q' | 'H' = 
 }
 
 /**
+ * Calculates empirical estimated scannability score based on design parameters
+ */
+export function calculateScannabilityScore(payload: string, custom: QRCustomization): { score: number; checks: Array<{ label: string; passed: boolean; tip?: string }> } {
+  const checks = [];
+  let score = 100;
+
+  // 1. Payload validation
+  const hasPayload = Boolean(payload && payload.trim().length > 0);
+  checks.push({
+    label: 'Payload Data Present',
+    passed: hasPayload,
+    tip: hasPayload ? undefined : 'QR payload string is empty.',
+  });
+  if (!hasPayload) score -= 50;
+
+  // 2. Short payload check (< 80 chars for clean low-density matrix)
+  const isShortPayload = payload.length < 80;
+  checks.push({
+    label: 'Low Matrix Density (< 80 chars)',
+    passed: isShortPayload,
+    tip: isShortPayload ? undefined : 'Long URL payload increases matrix density.',
+  });
+  if (!isShortPayload) score -= 15;
+
+  // 3. Contrast check
+  const fg = custom.fgColor?.toLowerCase() || '#000000';
+  const bg = custom.bgColor?.toLowerCase() || '#ffffff';
+  const sameColor = fg === bg;
+  checks.push({
+    label: 'High Color Contrast',
+    passed: !sameColor,
+    tip: !sameColor ? undefined : 'Foreground and background colors cannot be identical.',
+  });
+  if (sameColor) score -= 60;
+
+  // 4. Quiet Zone Margin Check
+  const margin = custom.margin ?? 4;
+  const sufficientMargin = margin >= 2;
+  checks.push({
+    label: 'Adequate Quiet Zone Margin',
+    passed: sufficientMargin,
+    tip: sufficientMargin ? undefined : 'Margin should be at least 2 modules.',
+  });
+  if (!sufficientMargin) score -= 15;
+
+  // 5. Logo occlusion check
+  const logoSize = custom.logoSize || 20;
+  const logoSafe = !custom.logoUrl || logoSize <= 25;
+  checks.push({
+    label: 'Safe Center Logo Size (<= 25%)',
+    passed: logoSafe,
+    tip: logoSafe ? undefined : 'Logo size covers too much central area.',
+  });
+  if (!logoSafe) score -= 20;
+
+  // 6. Error correction check
+  const eclNeeded = custom.logoUrl ? (custom.ecl === 'H' || custom.ecl === 'Q') : true;
+  checks.push({
+    label: 'Optimal Error Correction Level',
+    passed: eclNeeded,
+    tip: eclNeeded ? undefined : 'When using a logo overlay, set ECL to Q or H.',
+  });
+  if (!eclNeeded) score -= 10;
+
+  return {
+    score: Math.max(10, Math.min(100, score)),
+    checks,
+  };
+}
+
+/**
  * Renders custom SVG QR Code string with ISO 18004 Quiet Zone & Scannability Guarantee
  */
 export async function generateQRSVG(payload: string, custom: QRCustomization): Promise<string> {
-  const { matrix, size } = await getQRMatrix(payload, custom.ecl);
+  const effectiveEcl = custom.logoUrl ? (custom.ecl || 'Q') : 'M';
+  const { matrix, size } = await getQRMatrix(payload, effectiveEcl);
 
   // ISO 18004 specifies a minimum 4-module quiet zone margin for camera decoding
   const margin = Math.max(custom.margin || 4, 4);

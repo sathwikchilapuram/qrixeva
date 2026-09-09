@@ -1,5 +1,5 @@
 {
-  "name": "qrverse",
+  "name": "qrixeva",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -11,9 +11,11 @@
   "dependencies": {
     "@prisma/client": "^5.22.0",
     "@supabase/supabase-js": "^2.116.0",
+    "bcryptjs": "^3.0.3",
     "canvas-confetti": "^1.9.3",
     "clsx": "^2.1.1",
     "html2canvas": "^1.4.1",
+    "jose": "^6.2.12",
     "jspdf": "^2.5.2",
     "lucide-react": "^0.453.0",
     "next": "^14.2.15",
@@ -24,6 +26,7 @@
     "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^20.17.0",
     "@types/qrcode": "^1.5.5",

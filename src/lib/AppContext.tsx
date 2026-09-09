@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { QRCodeItem, StoredFile, ScanLog, UserProfile, AccentColor, ThemeMode } from '@/types';
 import { INITIAL_QR_CODES, INITIAL_FILES, INITIAL_SCANS, DEMO_USER_PROFILE } from './store';
+import { useAuth } from './AuthContext';
 
 interface Toast {
   id: string;
@@ -49,39 +50,76 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
   const [theme, setThemeState] = useState<ThemeMode>('light');
   const [accent, setAccentState] = useState<AccentColor>('violet');
-  const [qrCodes, setQrCodes] = useState<QRCodeItem[]>(INITIAL_QR_CODES);
-  const [files, setFiles] = useState<StoredFile[]>(INITIAL_FILES);
-  const [scans, setScans] = useState<ScanLog[]>(INITIAL_SCANS);
+  const [qrCodes, setQrCodes] = useState<QRCodeItem[]>([]);
+  const [files, setFiles] = useState<StoredFile[]>([]);
+  const [scans, setScans] = useState<ScanLog[]>([]);
   const [profile, setProfileState] = useState<UserProfile>(DEMO_USER_PROFILE);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [searchOpen, setSearchOpen] = useState(false);
 
-  // Load saved settings from localStorage on mount
+  // User-scoped keys
+  const userIdKey = user ? user.id : 'guest';
+
+  // Load saved settings & user data on mount / user change
   useEffect(() => {
     try {
-      const savedTheme = localStorage.getItem('qrverse_theme') as ThemeMode | null;
+      const savedTheme = (localStorage.getItem('qrixeva_theme') || localStorage.getItem('qrnova_theme')) as ThemeMode | null;
       if (savedTheme) setThemeState(savedTheme);
 
-      const savedAccent = localStorage.getItem('qrverse_accent') as AccentColor | null;
+      const savedAccent = (localStorage.getItem('qrixeva_accent') || localStorage.getItem('qrnova_accent')) as AccentColor | null;
       if (savedAccent) setAccentState(savedAccent);
 
-      const savedQRs = localStorage.getItem('qrverse_qrs');
-      if (savedQRs) setQrCodes(JSON.parse(savedQRs));
+      // Fetch user's specific QR codes from API
+      fetch('/api/qrs')
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success && Array.isArray(data.data)) {
+            setQrCodes(data.data);
+          } else {
+            const savedQRs = localStorage.getItem(`qrixeva_qrs_${userIdKey}`);
+            if (savedQRs) {
+              setQrCodes(JSON.parse(savedQRs));
+            } else if (!user) {
+              setQrCodes(INITIAL_QR_CODES);
+            } else {
+              setQrCodes([]);
+            }
+          }
+        })
+        .catch(() => {
+          const savedQRs = localStorage.getItem(`qrixeva_qrs_${userIdKey}`);
+          if (savedQRs) setQrCodes(JSON.parse(savedQRs));
+          else if (!user) setQrCodes(INITIAL_QR_CODES);
+          else setQrCodes([]);
+        });
 
-      const savedFiles = localStorage.getItem('qrverse_files');
+      const savedFiles = localStorage.getItem(`qrixeva_files_${userIdKey}`);
       if (savedFiles) setFiles(JSON.parse(savedFiles));
+      else if (!user) setFiles(INITIAL_FILES);
+      else setFiles([]);
 
-      const savedScans = localStorage.getItem('qrverse_scans');
+      const savedScans = localStorage.getItem(`qrixeva_scans_${userIdKey}`);
       if (savedScans) setScans(JSON.parse(savedScans));
+      else if (!user) setScans(INITIAL_SCANS);
+      else setScans([]);
 
-      const savedProfile = localStorage.getItem('qrverse_profile');
-      if (savedProfile) setProfileState(JSON.parse(savedProfile));
+      const savedProfile = localStorage.getItem(`qrixeva_profile_${userIdKey}`);
+      if (savedProfile) {
+        setProfileState(JSON.parse(savedProfile));
+      } else if (user) {
+        setProfileState({
+          ...DEMO_USER_PROFILE,
+          name: user.name,
+          phone: user.phone,
+        });
+      }
     } catch (e) {
-      console.error('Error loading from localStorage', e);
+      console.error('Error loading AppContext data', e);
     }
-  }, []);
+  }, [user, userIdKey]);
 
   // Update theme class on HTML element
   useEffect(() => {
@@ -91,14 +129,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     } else if (theme === 'light') {
       root.classList.remove('dark');
     } else {
-      // System mode
       if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
         root.classList.add('dark');
       } else {
         root.classList.remove('dark');
       }
     }
-    localStorage.setItem('qrverse_theme', theme);
+    localStorage.setItem('qrixeva_theme', theme);
   }, [theme]);
 
   // Update CSS variables for dynamic accent colors
@@ -119,37 +156,31 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     root.style.setProperty('--brand-400', sel[400]);
     root.style.setProperty('--brand-glow', sel.glow);
 
-    localStorage.setItem('qrverse_accent', accent);
+    localStorage.setItem('qrixeva_accent', accent);
   }, [accent]);
 
-  // Sync state to localStorage
+  // Sync state to user-isolated localStorage
   const syncQRs = (data: QRCodeItem[]) => {
     setQrCodes(data);
-    localStorage.setItem('qrverse_qrs', JSON.stringify(data));
+    localStorage.setItem(`qrixeva_qrs_${userIdKey}`, JSON.stringify(data));
   };
 
   const syncFiles = (data: StoredFile[]) => {
     setFiles(data);
-    localStorage.setItem('qrverse_files', JSON.stringify(data));
+    localStorage.setItem(`qrixeva_files_${userIdKey}`, JSON.stringify(data));
   };
 
   const syncScans = (data: ScanLog[]) => {
     setScans(data);
-    localStorage.setItem('qrverse_scans', JSON.stringify(data));
+    localStorage.setItem(`qrixeva_scans_${userIdKey}`, JSON.stringify(data));
   };
 
   const syncProfile = (data: UserProfile) => {
     setProfileState(data);
-    localStorage.setItem('qrverse_profile', JSON.stringify(data));
+    localStorage.setItem(`qrixeva_profile_${userIdKey}`, JSON.stringify(data));
   };
 
-  const addToast = (type: Toast['type'], message: string) => {
-    const id = 'toast-' + Math.random().toString(36).substring(2, 9);
-    setToasts((prev) => [...prev, { id, type, message }]);
-    setTimeout(() => {
-      removeToast(id);
-    }, 4000);
-  };
+  const addToast = (type: Toast['type'], message: string) => {};
 
   const removeToast = (id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -158,32 +189,40 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const addQRCode = (qr: QRCodeItem) => {
     const updated = [qr, ...qrCodes];
     syncQRs(updated);
-    addToast('success', `QR Code "${qr.name}" created successfully!`);
+
+    fetch('/api/qrs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(qr),
+    }).catch((err) => console.warn('Failed to sync QR to API:', err));
   };
 
   const updateQRCode = (id: string, updates: Partial<QRCodeItem>) => {
+    const target = qrCodes.find((q) => q.id === id);
+    const updatedQr = target ? { ...target, ...updates, updatedAt: new Date().toISOString() } : null;
     const updated = qrCodes.map((qr) =>
       qr.id === id ? { ...qr, ...updates, updatedAt: new Date().toISOString() } : qr
     );
     syncQRs(updated);
-    addToast('success', 'QR code updated successfully.');
+
+    if (updatedQr) {
+      fetch('/api/qrs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedQr),
+      }).catch((err) => console.warn('Failed to sync QR update to API:', err));
+    }
   };
 
   const deleteQRCode = (id: string) => {
-    const target = qrCodes.find((q) => q.id === id);
     const updated = qrCodes.filter((qr) => qr.id !== id);
     syncQRs(updated);
-    addToast('info', `QR code "${target?.name || ''}" deleted.`);
   };
 
   const toggleQRStatus = (id: string) => {
     const updated = qrCodes.map((qr) => {
       if (qr.id === id) {
         const nextStatus = qr.status === 'active' ? 'disabled' : 'active';
-        addToast(
-          nextStatus === 'active' ? 'success' : 'warning',
-          `QR Code is now ${nextStatus.toUpperCase()}.`
-        );
         return { ...qr, status: nextStatus as QRCodeItem['status'] };
       }
       return qr;
@@ -194,20 +233,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const addFile = (file: StoredFile) => {
     const updated = [file, ...files];
     syncFiles(updated);
-    addToast('success', `File "${file.name}" uploaded successfully.`);
   };
 
   const deleteFile = (id: string) => {
-    const target = files.find((f) => f.id === id);
     const updated = files.filter((f) => f.id !== id);
     syncFiles(updated);
-    addToast('info', `File "${target?.name || ''}" removed.`);
   };
 
   const updateProfile = (updates: Partial<UserProfile>) => {
     const updated = { ...profile, ...updates };
     syncProfile(updated);
-    addToast('success', 'Profile updated successfully.');
   };
 
   const recordScan = (
@@ -231,7 +266,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const updatedScans = [newScan, ...scans];
     syncScans(updatedScans);
 
-    // Also update scan count on QR code item
     const updatedQRs = qrCodes.map((q) =>
       q.id === qrId ? { ...q, scansCount: q.scansCount + 1 } : q
     );

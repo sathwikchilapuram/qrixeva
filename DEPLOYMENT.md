@@ -1,97 +1,76 @@
-# 🌐 QRVerse — Complete Production Deployment Guide
+# 🌐 Qrixeva — Complete Production Deployment Guide
 
-This document outlines the production architecture and step-by-step instructions to deploy **QRVerse** using **GitHub**, **Vercel**, **Supabase PostgreSQL**, and **Supabase Storage**.
+This document outlines the production architecture and step-by-step instructions to deploy **Qrixeva** using **GitHub**, **Vercel**, **Supabase PostgreSQL**, and **Supabase Storage**.
 
 ---
 
-## 🏗️ Production System Architecture
+## 🏛️ Production Architecture Overview
 
 ```text
-                                QRVerse
+                                Qrixeva
+                       (https://qrixeva.vercel.app)
                                    │
-                                   ↓
-                                Vercel
-                        Frontend + Next.js Server
-                                   │
-                         ┌─────────┴─────────┐
-                         ↓                   ↓
-                  Supabase Database    Supabase Storage
-                   PostgreSQL DB        PDFs / Documents
-                         │                   │
-                         └─────────┬─────────┘
-                                   ↓
-                             Dynamic QR
-                                   ↓
-                        https://<domain>/x/<slug>
-                                   ↓
-                             User's Phone
+                 ┌─────────────────┴─────────────────┐
+                 │                                   │
+                 ▼                                   ▼
+        Vercel (App Server)                 Supabase Platform
+    ├─ Next.js App Router API          ├─ PostgreSQL Database (Prisma)
+    ├─ Dynamic Route Engine (/x/slug)  └─ Storage Buckets (Files/PDFs)
+    └─ Edge Function Processing
 ```
 
 ---
 
-## 📋 Step 1: Create Supabase PostgreSQL & Storage Buckets
+## 1. SUPABASE DATABASE & STORAGE SETUP
 
-1. Log into your [Supabase Dashboard](https://database.new) and click **New Project**.
-2. Name the project **`QRVerse-Production`** and select a database password.
-3. Once provisioned, navigate to **Project Settings -> Database** and copy:
-   - **Transaction Connection String (Pooled)** -> `DATABASE_URL`
-   - **Session Connection String (Direct)** -> `DIRECT_URL`
-4. Navigate to **Project Settings -> API** and copy:
-   - **Project URL** -> `NEXT_PUBLIC_SUPABASE_URL`
-   - **anon public key** -> `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - **service_role secret** -> `SUPABASE_SERVICE_ROLE_KEY`
-5. Navigate to **Storage** in Supabase and create 5 public buckets:
-   - `resumes`
-   - `documents`
-   - `images`
-   - `videos`
-   - `other-files`
+### A. Create PostgreSQL Database
+1. Go to [Supabase Dashboard](https://database.new) and create a project named **`Qrixeva-Production`**.
+2. Note down your **Database Password** and **Project Reference ID**.
+3. Under **Project Settings -> Database**, retrieve your connection strings:
+   - **Transaction Connection String (Port 6543 / PgBouncer):** `DATABASE_URL`
+   - **Direct Connection String (Port 5432):** `DIRECT_URL`
+
+### B. Create Supabase Storage Buckets
+In the **Storage** section of your Supabase dashboard, create 5 public storage buckets:
+1. `qrixeva-pdfs` (Public)
+2. `qrixeva-images` (Public)
+3. `qrixeva-videos` (Public)
+4. `qrixeva-audio` (Public)
+5. `qrixeva-resumes` (Public)
 
 ---
 
-## 💾 Step 2: Push Prisma Schema to Supabase PostgreSQL
+## 2. DATABASE MIGRATION & PRISMA CLIENT
 
-Run the following command locally with your `DATABASE_URL` configured in `.env`:
+Push the Prisma schema to your Supabase PostgreSQL instance:
 
 ```bash
+# Set your environment variable
+export DATABASE_URL="postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:6543/postgres?pgbouncer=true"
+export DIRECT_URL="postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres"
+
+# Push schema tables to database
 npx prisma db push
 ```
 
-This will automatically create all production database tables (`User`, `QRCode`, `StoredFile`, `ScanLog`, `UserProfile`).
-
 ---
 
-## 🚀 Step 3: Deploy to Vercel
+## 3. VERCEL DEPLOYMENT & PRODUCTION DOMAIN
 
-1. Push your repository to **GitHub**:
+1. Link your repository to Vercel:
    ```bash
-   git init
-   git add .
-   git commit -m "Deploy QRVerse Platform"
-   git remote add origin https://github.com/YOUR_USERNAME/qrverse.git
-   git push -u origin main
+   npx vercel --prod
    ```
 
-2. Go to [Vercel Dashboard](https://vercel.com/new) and click **Import Repository**.
-3. Under **Environment Variables**, add:
+2. In the Vercel Project Settings, add environment variables:
 
 | Key | Example Value |
 |---|---|
-| `NEXT_PUBLIC_APP_URL` | `https://qrverse-theta.vercel.app` |
+| `NEXT_PUBLIC_APP_URL` | `https://qrixeva.vercel.app` |
 | `DATABASE_URL` | `postgresql://postgres:...@db.xxx.supabase.co:6543/postgres` |
 | `DIRECT_URL` | `postgresql://postgres:...@db.xxx.supabase.co:5432/postgres` |
 | `NEXT_PUBLIC_SUPABASE_URL` | `https://xxx.supabase.co` |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `eyJhbGciOi...` |
 | `SUPABASE_SERVICE_ROLE_KEY` | `eyJhbGciOi...` |
 
-4. Click **Deploy**. Vercel will build and assign your production HTTPS URL (e.g. `https://qrverse.vercel.app`).
-
----
-
-## 🧪 Step 4: End-to-End Production Verification
-
-1. Open your deployed production URL (`https://qrverse.vercel.app`).
-2. Go to **Dashboard -> Create QR**.
-3. Create a dynamic PDF or Resume QR code and upload a file.
-4. Verify that the generated QR payload uses your production domain (`https://qrverse.vercel.app/x/your-slug`).
-5. Scan the QR code on a mobile phone to confirm the public experience page opens.
+3. Assign `https://qrixeva.vercel.app` as your primary production domain.

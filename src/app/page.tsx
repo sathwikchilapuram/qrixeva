@@ -30,7 +30,6 @@ import {
 
 export default function LandingPage() {
   const [heroSvg, setHeroSvg] = useState<string>('');
-  const [activeTab, setActiveTab] = useState<'dynamic' | 'static'>('dynamic');
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [customStyle, setCustomStyle] = useState<{
     fgColor: string;
@@ -43,7 +42,8 @@ export default function LandingPage() {
   });
 
   useEffect(() => {
-    generateQRSVG('https://qrverse-theta.vercel.app/x/alex-resume', {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? window.location.origin : 'https://qrixeva.vercel.app');
+    generateQRSVG(`${baseUrl}/x/alex-resume`, {
       ...DEFAULT_CUSTOMIZATION,
       fgColor: customStyle.fgColor,
       pattern: customStyle.pattern,
@@ -70,7 +70,7 @@ export default function LandingPage() {
   const faqs = [
     {
       q: 'What is the difference between Static and Dynamic QR codes?',
-      a: 'Static QR codes encode data directly into the pixel pattern. Dynamic QR codes route through a secure QRVerse URL (qrverse.app/x/slug), allowing you to edit the destination, content, password rules, or expiration date at any time without re-printing the QR code.',
+      a: 'Static QR codes encode data directly into the pixel pattern. Dynamic QR codes route through a secure Qrixeva URL (qrixeva.vercel.app/x/slug), allowing you to edit the destination, content, password rules, or expiration date at any time without re-printing the QR code.',
     },
     {
       q: 'Can I track scan analytics for my QR codes?',
@@ -209,7 +209,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* WHAT IS QRVERSE SECTION */}
+      {/* WHAT IS QRIXEVA SECTION */}
       <section id="features" className="py-20 bg-gray-50 dark:bg-gray-900/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
@@ -218,7 +218,7 @@ export default function LandingPage() {
               Why settle for simple static QR generators?
             </h3>
             <p className="text-gray-600 dark:text-gray-400 text-lg">
-              QRVerse powers digital connections across enterprise resume sharing, food menus, file hosting, event access cards, and smart app redirects.
+              Qrixeva powers digital connections across enterprise resume sharing, food menus, file hosting, event access cards, and smart app redirects.
             </p>
           </div>
 
@@ -289,84 +289,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* DYNAMIC VS STATIC INTERACTIVE SECTION */}
-      <section id="dynamic-qr" className="py-20 bg-gray-50 dark:bg-gray-900/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-3xl p-8 sm:p-12 shadow-2xl">
-            <div className="flex justify-center mb-8">
-              <div className="p-1 rounded-2xl bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 flex gap-2">
-                <button
-                  onClick={() => setActiveTab('dynamic')}
-                  className={`px-6 py-2.5 rounded-xl font-semibold text-sm transition ${
-                    activeTab === 'dynamic' ? 'bg-brand-500 text-white shadow-lg' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'
-                  }`}
-                >
-                  Dynamic QR (Recommended)
-                </button>
-                <button
-                  onClick={() => setActiveTab('static')}
-                  className={`px-6 py-2.5 rounded-xl font-semibold text-sm transition ${
-                    activeTab === 'static' ? 'bg-brand-500 text-white shadow-lg' : 'text-gray-500 hover:text-gray-900 dark:hover:text-white'
-                  }`}
-                >
-                  Static QR
-                </button>
-              </div>
-            </div>
 
-            {activeTab === 'dynamic' ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                <div className="space-y-4">
-                  <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold uppercase tracking-wider">
-                    Editable & Trackable
-                  </span>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    Edit Destination Anytime Without Replacing the QR
-                  </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                    Dynamic QRs store a short QRVerse redirect URL. You can change your restaurant menu, replace an updated CV file, configure password protection, or temporarily disable access anytime.
-                  </p>
-                  <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                    <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-500" /> Live scan analytics logging</li>
-                    <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-500" /> Password security & expiration control</li>
-                    <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-500" /> Mobile-first public experiences</li>
-                  </ul>
-                </div>
-
-                <div className="p-6 rounded-2xl bg-gray-900 border border-gray-800 text-xs font-mono space-y-3 text-gray-300">
-                  <div className="text-gray-500">// Dynamic Flow Architecture</div>
-                  <div className="p-2 rounded bg-gray-950 border border-gray-800 text-brand-400">1. Physical QR Scan</div>
-                  <div className="text-center text-gray-600">↓</div>
-                  <div className="p-2 rounded bg-gray-950 border border-gray-800 text-purple-400">2. qrverse.app/x/alex-resume</div>
-                  <div className="text-center text-gray-600">↓</div>
-                  <div className="p-2 rounded bg-gray-950 border border-gray-800 text-emerald-400">3. Verified Public Experience + Scan Metric Recorded</div>
-                </div>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                <div className="space-y-4">
-                  <span className="px-3 py-1 rounded-full bg-gray-800 text-gray-300 text-xs font-bold uppercase tracking-wider">
-                    Direct Hardcoded Content
-                  </span>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    Direct Offline Payload Encoding
-                  </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                    Static QR codes embed raw text, URLs, or vCard strings directly inside the matrix. They never expire and require no backend server, but cannot be edited or tracked once printed.
-                  </p>
-                </div>
-
-                <div className="p-6 rounded-2xl bg-gray-900 border border-gray-800 text-xs font-mono space-y-3 text-gray-300">
-                  <div className="text-gray-500">// Static Encoding Flow</div>
-                  <div className="p-2 rounded bg-gray-950 border border-gray-800 text-gray-400">1. Raw Text Payload</div>
-                  <div className="text-center text-gray-600">↓</div>
-                  <div className="p-2 rounded bg-gray-950 border border-gray-800 text-gray-400">2. Direct Hardware Matrix Scan</div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
 
       {/* AI ASSISTANT SHOWCASE */}
       <section className="py-20">
@@ -412,74 +335,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* PRICING PLACEHOLDER SECTION */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-900/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-brand-500">Transparent Pricing</h2>
-            <h3 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-              Simple plans for creators & teams
-            </h3>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Free */}
-            <div className="p-8 rounded-3xl bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 shadow-lg space-y-6">
-              <div>
-                <h4 className="text-lg font-bold text-gray-900 dark:text-white">Starter</h4>
-                <p className="text-xs text-gray-500 mt-1">For personal QR generation</p>
-                <div className="mt-4 text-3xl font-extrabold text-gray-900 dark:text-white">$0 <span className="text-xs font-normal text-gray-500">/ forever</span></div>
-              </div>
-              <ul className="space-y-3 text-xs text-gray-600 dark:text-gray-400">
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-500" /> Unlimited Static QRs</li>
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-500" /> Up to 3 Dynamic QRs</li>
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-500" /> Standard Customization Studio</li>
-              </ul>
-              <Link href="/dashboard/create" className="block text-center py-3 rounded-xl border border-gray-300 dark:border-gray-700 font-semibold text-xs hover:bg-gray-100 dark:hover:bg-gray-900 transition">
-                Start Free
-              </Link>
-            </div>
-
-            {/* Pro */}
-            <div className="p-8 rounded-3xl bg-gray-900 border-2 border-brand-500 shadow-2xl space-y-6 relative">
-              <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-brand-500 text-white text-[10px] font-extrabold uppercase tracking-wider">
-                Most Popular
-              </span>
-              <div>
-                <h4 className="text-lg font-bold text-white">Pro Developer</h4>
-                <p className="text-xs text-gray-400 mt-1">For power creators & businesses</p>
-                <div className="mt-4 text-3xl font-extrabold text-white">$19 <span className="text-xs font-normal text-gray-400">/ month</span></div>
-              </div>
-              <ul className="space-y-3 text-xs text-gray-300">
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-400" /> Unlimited Dynamic QRs</li>
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-400" /> Advanced Analytics & Device Logs</li>
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-400" /> Custom Logo & Vector SVG Export</li>
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-400" /> Password Security & Expiration Dates</li>
-              </ul>
-              <Link href="/dashboard/create" className="block text-center py-3 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-semibold text-xs transition shadow-lg shadow-brand-500/30">
-                Upgrade to Pro
-              </Link>
-            </div>
-
-            {/* Enterprise */}
-            <div className="p-8 rounded-3xl bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 shadow-lg space-y-6">
-              <div>
-                <h4 className="text-lg font-bold text-gray-900 dark:text-white">Enterprise</h4>
-                <p className="text-xs text-gray-500 mt-1">For organizations & multi-teams</p>
-                <div className="mt-4 text-3xl font-extrabold text-gray-900 dark:text-white">$79 <span className="text-xs font-normal text-gray-500">/ month</span></div>
-              </div>
-              <ul className="space-y-3 text-xs text-gray-600 dark:text-gray-400">
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-500" /> Custom Domain Redirects</li>
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-500" /> Dedicated Cloud Storage</li>
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-500" /> SLA & 24/7 Priority Support</li>
-              </ul>
-              <Link href="/dashboard/create" className="block text-center py-3 rounded-xl border border-gray-300 dark:border-gray-700 font-semibold text-xs hover:bg-gray-100 dark:hover:bg-gray-900 transition">
-                Contact Sales
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* FAQ ACCORDION SECTION */}
       <section id="faq" className="py-20">
