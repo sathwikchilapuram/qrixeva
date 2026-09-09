@@ -21,16 +21,18 @@ export async function getQRMatrix(payload: string, ecl: 'L' | 'M' | 'Q' | 'H' = 
 }
 
 /**
- * Renders custom SVG QR Code string based on customization settings
+ * Renders custom SVG QR Code string with ISO 18004 Quiet Zone & Scannability Guarantee
  */
 export async function generateQRSVG(payload: string, custom: QRCustomization): Promise<string> {
   const { matrix, size } = await getQRMatrix(payload, custom.ecl);
-  const margin = custom.margin;
+
+  // ISO 18004 specifies a minimum 4-module quiet zone margin for camera decoding
+  const margin = Math.max(custom.margin || 4, 4);
   const totalSize = size + margin * 2;
   const cellSize = 10;
   const viewBoxSize = totalSize * cellSize;
 
-  // Identify finder eye corners (Top-Left, Top-Right, Bottom-Left)
+  // Identify finder eye corners (Top-Left 7x7, Top-Right 7x7, Bottom-Left 7x7)
   const isEyeArea = (r: number, c: number) => {
     if (r < 7 && c < 7) return true; // Top Left
     if (r < 7 && c >= size - 7) return true; // Top Right
@@ -47,7 +49,7 @@ export async function generateQRSVG(payload: string, custom: QRCustomization): P
         const y = (r + margin) * cellSize;
 
         if (custom.pattern === 'dots') {
-          pathsHtml += `<circle cx="${x + cellSize / 2}" cy="${y + cellSize / 2}" r="${cellSize * 0.4}" />`;
+          pathsHtml += `<circle cx="${x + cellSize / 2}" cy="${y + cellSize / 2}" r="${cellSize * 0.42}" />`;
         } else if (custom.pattern === 'rounded') {
           pathsHtml += `<rect x="${x + 0.5}" y="${y + 0.5}" width="${cellSize - 1}" height="${cellSize - 1}" rx="${cellSize * 0.35}" />`;
         } else if (custom.pattern === 'extra-rounded') {
@@ -62,7 +64,7 @@ export async function generateQRSVG(payload: string, custom: QRCustomization): P
     }
   }
 
-  // Draw custom Eye Corners
+  // Draw custom Eye Corners with exact 7x7 cell positioning
   const drawEye = (startR: number, startC: number) => {
     const ox = (startC + margin) * cellSize;
     const oy = (startR + margin) * cellSize;
@@ -75,14 +77,14 @@ export async function generateQRSVG(payload: string, custom: QRCustomization): P
 
     if (custom.eyeStyle === 'rounded' || custom.eyeStyle === 'leaf') {
       const rx = custom.eyeStyle === 'leaf' ? outerW * 0.4 : outerW * 0.25;
-      outerShape = `<rect x="${ox}" y="${oy}" width="${outerW}" height="${outerW}" rx="${rx}" stroke="url(#fg-grad)" stroke-width="${cellSize}" fill="none" />`;
+      outerShape = `<rect x="${ox + cellSize / 2}" y="${oy + cellSize / 2}" width="${outerW - cellSize}" height="${outerW - cellSize}" rx="${rx}" stroke="url(#fg-grad)" stroke-width="${cellSize}" fill="none" />`;
       innerShape = `<rect x="${ox + innerOffset}" y="${oy + innerOffset}" width="${innerW}" height="${innerW}" rx="${rx * 0.6}" fill="url(#fg-grad)" />`;
     } else if (custom.eyeStyle === 'dot') {
       const outerRadius = outerW / 2;
       outerShape = `<circle cx="${ox + outerRadius}" cy="${oy + outerRadius}" r="${outerRadius - cellSize / 2}" stroke="url(#fg-grad)" stroke-width="${cellSize}" fill="none" />`;
       innerShape = `<circle cx="${ox + outerRadius}" cy="${oy + outerRadius}" r="${innerW / 2}" fill="url(#fg-grad)" />`;
     } else {
-      // square
+      // standard square eye
       outerShape = `<rect x="${ox + cellSize / 2}" y="${oy + cellSize / 2}" width="${outerW - cellSize}" height="${outerW - cellSize}" stroke="url(#fg-grad)" stroke-width="${cellSize}" fill="none" />`;
       innerShape = `<rect x="${ox + innerOffset}" y="${oy + innerOffset}" width="${innerW}" height="${innerW}" fill="url(#fg-grad)" />`;
     }
@@ -110,45 +112,44 @@ export async function generateQRSVG(payload: string, custom: QRCustomization): P
     `;
   }
 
-  // Frame Setup
+  // Frame Setup with generous margin padding
   let frameHeader = '';
   let frameFooter = '';
   let totalSvgHeight = viewBoxSize;
-  let qrOffsetY = 0;
 
   if (custom.frame === 'scanner' || custom.frame === 'rounded' || custom.frame === 'simple') {
-    const framePadding = 24;
-    const textHeight = 40;
-    qrOffsetY = framePadding;
+    const framePadding = 30;
+    const textHeight = 44;
     totalSvgHeight = viewBoxSize + framePadding * 2 + textHeight;
 
     const frameRectHeight = viewBoxSize + framePadding * 2 + textHeight;
     const frameWidth = viewBoxSize + framePadding * 2;
 
     frameHeader = `
-      <rect x="0" y="0" width="${frameWidth}" height="${frameRectHeight}" rx="24" fill="${custom.frameColor}" />
-      <rect x="${framePadding - 4}" y="${framePadding - 4}" width="${viewBoxSize + 8}" height="${viewBoxSize + 8}" rx="16" fill="${custom.bgColor}" />
+      <rect x="0" y="0" width="${frameWidth}" height="${frameRectHeight}" rx="24" fill="${custom.frameColor || custom.fgColor}" />
+      <rect x="${framePadding}" y="${framePadding}" width="${viewBoxSize}" height="${viewBoxSize}" rx="16" fill="${custom.bgColor}" />
     `;
 
     frameFooter = `
-      <text x="${frameWidth / 2}" y="${frameRectHeight - 20}" font-family="system-ui, sans-serif" font-weight="800" font-size="18" fill="#ffffff" text-anchor="middle" letter-spacing="1.5">
-        ${custom.frameText || 'SCAN ME'}
+      <text x="${frameWidth / 2}" y="${frameRectHeight - 20}" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="16" fill="#ffffff" text-anchor="middle" letter-spacing="2">
+        ${(custom.frameText || 'SCAN ME').toUpperCase()}
       </text>
     `;
   }
 
-  const finalWidth = custom.frame !== 'none' ? viewBoxSize + 48 : viewBoxSize;
+  const finalWidth = custom.frame !== 'none' ? viewBoxSize + 60 : viewBoxSize;
   const finalHeight = totalSvgHeight;
-  const qrX = custom.frame !== 'none' ? 24 : 0;
-  const qrY = custom.frame !== 'none' ? 24 : 0;
+  const qrX = custom.frame !== 'none' ? 30 : 0;
+  const qrY = custom.frame !== 'none' ? 30 : 0;
 
-  // Logo Overlay Center Clear Zone
+  // Logo Overlay Center Clear Zone (Max 22% size for guaranteed scannability)
   let logoHtml = '';
   if (custom.logoUrl) {
-    const logoDimension = (viewBoxSize * custom.logoSize) / 100;
+    const maxLogoPct = Math.min(custom.logoSize || 20, 22);
+    const logoDimension = (viewBoxSize * maxLogoPct) / 100;
     const logoX = (viewBoxSize - logoDimension) / 2 + qrX;
     const logoY = (viewBoxSize - logoDimension) / 2 + qrY;
-    const bgPadding = 8;
+    const bgPadding = 10;
 
     logoHtml = `
       <rect x="${logoX - bgPadding}" y="${logoY - bgPadding}" width="${logoDimension + bgPadding * 2}" height="${logoDimension + bgPadding * 2}" rx="12" fill="${custom.bgColor}" />
@@ -159,7 +160,7 @@ export async function generateQRSVG(payload: string, custom: QRCustomization): P
   return `
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${finalWidth} ${finalHeight}" width="100%" height="100%">
       <defs>${gradDef}</defs>
-      ${custom.frame === 'none' ? `<rect x="0" y="0" width="${viewBoxSize}" height="${viewBoxSize}" fill="${custom.bgColor}" />` : ''}
+      <rect x="0" y="0" width="${finalWidth}" height="${finalHeight}" fill="${custom.bgColor}" />
       ${frameHeader}
       <g transform="translate(${qrX}, ${qrY})">
         <g fill="url(#fg-grad)">

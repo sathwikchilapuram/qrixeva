@@ -46,7 +46,7 @@ export function CustomizationStudio({ initialType = 'url', initialContent = {}, 
   const [testModalOpen, setTestModalOpen] = useState(false);
 
   useEffect(() => {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000');
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? window.location.origin : 'https://qrverse-theta.vercel.app');
     const payloadStr = mode === 'dynamic'
       ? `${baseUrl}/x/${name.toLowerCase().replace(/[^a-z0-9]/g, '-') || 'demo'}`
       : (contentPayload?.url || contentPayload?.text || JSON.stringify(contentPayload));
@@ -96,7 +96,7 @@ export function CustomizationStudio({ initialType = 'url', initialContent = {}, 
     }
   };
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000');
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? window.location.origin : 'https://qrverse-theta.vercel.app');
   const payloadStr = mode === 'dynamic'
     ? `${baseUrl}/x/${name.toLowerCase().replace(/[^a-z0-9]/g, '-') || 'demo'}`
     : (contentPayload?.url || contentPayload?.text || JSON.stringify(contentPayload));

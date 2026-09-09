@@ -43,7 +43,7 @@ export default function LandingPage() {
   });
 
   useEffect(() => {
-    generateQRSVG('https://qrverse.app/demo', {
+    generateQRSVG('https://qrverse-theta.vercel.app/x/alex-resume', {
       ...DEFAULT_CUSTOMIZATION,
       fgColor: customStyle.fgColor,
       pattern: customStyle.pattern,
