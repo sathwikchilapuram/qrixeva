@@ -77,7 +77,7 @@ This will automatically create all production database tables (`User`, `QRCode`,
 
 | Key | Example Value |
 |---|---|
-| `NEXT_PUBLIC_APP_URL` | `https://qrverse.vercel.app` |
+| `NEXT_PUBLIC_APP_URL` | `https://qrverse-theta.vercel.app` |
 | `DATABASE_URL` | `postgresql://postgres:...@db.xxx.supabase.co:6543/postgres` |
 | `DIRECT_URL` | `postgresql://postgres:...@db.xxx.supabase.co:5432/postgres` |
 | `NEXT_PUBLIC_SUPABASE_URL` | `https://xxx.supabase.co` |
