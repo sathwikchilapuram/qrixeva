@@ -1,0 +1,87 @@
+// Prisma schema for QRVerse Platform
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  avatarUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  qrCodes   QRCode[]
+  files     StoredFile[]
+  profile   UserProfile?
+}
+
+model QRCode {
+  id            String   @id @default(uuid())
+  userId        String?
+  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name          String
+  slug          String   @unique
+  type          String
+  mode          String   @default("dynamic")
+  status        String   @default("active")
+  accessControl String   @default("public")
+  password      String?
+  expiresAt     DateTime?
+  content       Json
+  customization Json
+  scansCount    Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  scans         ScanLog[]
+}
+
+model StoredFile {
+  id         String   @id @default(uuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  filename   String
+  type       String
+  size       Int
+  storageUrl String
+  downloads  Int      @default(0)
+  createdAt  DateTime @default(now())
+}
+
+model ScanLog {
+  id          String   @id @default(uuid())
+  qrCodeId    String
+  qrCode      QRCode   @relation(fields: [qrCodeId], references: [id], onDelete: Cascade)
+  timestamp   DateTime @default(now())
+  device      String
+  browser     String
+  os          String
+  location    String?
+  referrer    String?
+}
+
+model UserProfile {
+  id         String   @id @default(uuid())
+  userId     String   @unique
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name       String
+  email      String
+  title      String?
+  bio        String?
+  avatarUrl  String?
+  skills     Json?
+  education  Json?
+  experience Json?
+  projects   Json?
+  socials    Json?
+  phone      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
