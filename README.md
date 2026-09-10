@@ -10,6 +10,10 @@ It supports multiple QR experiences including websites, text, contact informatio
 
 Qrixeva combines **QR technology, dynamic content, authentication, cloud storage, database management, and analytics** into one platform.
 
+## 🌐 Live Demo
+
+**Qrixeva:** https://qrixeva.vercel.app/
+
 ## 🚀 Key Features
 
 - Create customizable QR codes
@@ -71,10 +75,6 @@ This approach keeps QR codes **clean, compact, and easier to manage** while allo
 4. Configure the required environment variables using `.env.example`.
 5. Start the development server using `npm run dev`.
 6. Open the application at `http://localhost:3000`.
-
-## 🌐 Live Demo
-
-**Qrixeva:** https://qrixeva.vercel.app/
 
 ## 🔐 Security
 
