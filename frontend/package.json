@@ -1,12 +1,12 @@
 {
-  "name": "qrixeva",
+  "name": "qrixeva-frontend",
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "cd frontend && npm run dev",
-    "build": "cd frontend && npm run build",
-    "start": "cd frontend && npm run start",
-    "lint": "cd frontend && npm run lint"
+    "dev": "next dev",
+    "build": "npx prisma generate --schema=../backend/prisma/schema.prisma && next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",

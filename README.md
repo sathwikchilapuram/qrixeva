@@ -100,31 +100,26 @@ Each user has their own dedicated Qrixeva account and personal dashboard. User d
 
 ```text
 Qrixeva/
-├── public/                 # Favicons, web icons, and static assets
-├── prisma/                 # PostgreSQL database schema (schema.prisma)
-├── scripts/                # Utility scripts for asset generation
-├── src/
-│   ├── app/                # App Router pages and server API routes
-│   │   ├── api/            # Server API endpoints (Auth, QRs, Files, Upload)
-│   │   ├── dashboard/      # User dashboard pages (Overview, Analytics, Files, Profile)
-│   │   ├── login/          # Sign In & Registration workspace
-│   │   ├── x/              # Dynamic QR routing & resolution engine (/x/[slug])
-│   │   ├── layout.tsx      # Root application layout & metadata
-│   │   └── page.tsx        # Qrixeva homepage & landing page
-│   ├── components/         # Reusable UI & layout components
-│   │   ├── branding/       # Brand logo & visual identity components
-│   │   ├── layout/         # Header, Navbar, Sidebar, Footer components
-│   │   ├── qr/             # Customization studio & scanner modal components
-│   │   └── ui/             # Search modal, toast container, and UI elements
-│   ├── lib/                # Business logic, Auth, DB client, QR engines
-│   └── types/              # TypeScript definitions & data models
-├── .env.example            # Environment variable template
-├── .gitignore              # Security and build output ignore rules
-├── DEPLOYMENT.md           # Production deployment & architecture guide
-├── package.json            # Dependencies and build scripts
-├── README.md               # Project documentation
-├── supabase_rls_policies.sql # PostgreSQL Row Level Security (RLS) policies
-└── tsconfig.json           # TypeScript configuration
+├── frontend/             # Next.js Web App (UI, App Router, Components, Assets)
+│   ├── public/           # Logos, favicons, web icons
+│   ├── src/              # Application source code
+│   │   ├── app/          # App Router pages and API routes
+│   │   ├── components/   # UI components (branding, layout, qr, ui)
+│   │   ├── lib/          # Business logic, auth, db client, phone normalization
+│   │   └── types/        # TypeScript interfaces and data models
+│   ├── next.config.js    # Next.js configuration
+│   ├── package.json      # Frontend package configuration
+│   └── tsconfig.json     # TypeScript configuration
+├── backend/              # Database Schema, Prisma Engine, RLS Policies
+│   ├── prisma/           # PostgreSQL Prisma database schema (schema.prisma)
+│   ├── scripts/          # Asset generation scripts
+│   ├── DEPLOYMENT.md     # Production deployment documentation
+│   └── supabase_rls_policies.sql # PostgreSQL RLS policies
+├── .env.example          # Environment variable template
+├── .gitignore            # Git ignore rules for build outputs & local secrets
+├── package.json          # Root workspace configuration
+├── vercel.json           # Vercel deployment configuration
+└── README.md             # Portfolio-ready project documentation
 ```
 
 ---
@@ -141,7 +136,7 @@ npm install
 
 ### 2. Environment Configuration
 
-Create a `.env.local` file in the root directory and add the required environment variables (see `.env.example` for details):
+Create a `.env.local` file in `frontend/` (or root) and add the required environment variables (see `.env.example` for details):
 
 ```env
 NEXT_PUBLIC_APP_URL=http://localhost:3000

@@ -1,13 +1,17 @@
 # dependencies
 /node_modules
+*/node_modules
 /.pnpm-store
 
 # next.js
 /.next/
+*/.next/
 /out/
+*/out/
 
 # production
 /build
+*/build
 
 # debug
 npm-debug.log*
@@ -18,13 +22,16 @@ yarn-error.log*
 .env
 .env*.local
 !.env.example
+*.env.local
 
 # vercel
 .vercel
+*/.vercel
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+frontend/next-env.d.ts
 
 # OS metadata
 .DS_Store
