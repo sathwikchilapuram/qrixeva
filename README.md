@@ -1,6 +1,6 @@
 # ⚡ Qrixeva
 
-![Next.js](https://img.shields.io/badge/Next.js-Full--Stack-black?logo=next.js) ![TypeScript](https://img.shields.io/badge/TypeScript-Development-blue?logo=typescript) ![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?logo=supabase) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-336791?logo=postgresql) ![Vercel](https://img.shields.io/badge/Vercel-Deployment-black?logo=vercel)
+![Next.js](https://img.shields.io/badge/) ![TypeScript](https://img.shields.io/badge/TypeScript-Development-blue?logo=typescript) ![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?logo=supabase) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-336791?logo=postgresql) ![Vercel](https://img.shields.io/badge/Vercel-Deployment-black?logo=vercel)
 
 ## 📌 About
 
@@ -104,6 +104,3 @@ The goal of Qrixeva is to provide a **simple, scalable, and feature-rich QR plat
 Computer Science & Engineering  
 GRIET, Hyderabad
 
-## 📄 License
-
-This project is developed for educational, portfolio, and hackathon purposes.
