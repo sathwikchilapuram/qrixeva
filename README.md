@@ -67,6 +67,24 @@ This approach keeps QR codes **clean, compact, and easier to manage** while allo
 | Prisma | Database ORM |
 | Vercel | Deployment |
 
+## 📁 Project Structure
+
+```text
+qrixeva/
+├── prisma/              # Database schema and configuration
+├── public/              # Static assets and icons
+├── scripts/             # Utility and setup scripts
+├── src/                 # Main application source code
+├── .env.example         # Environment variable template
+├── .gitignore           # Git ignored files
+├── DEPLOYMENT.md        # Deployment documentation
+├── next.config.js       # Next.js configuration
+├── package.json         # Project dependencies and scripts
+├── postcss.config.js    # PostCSS configuration
+├── supabase_rls_policies.sql  # Database security policies
+├── tailwind.config.js   # Tailwind CSS configuration
+└── tsconfig.json        # TypeScript configuration
+
 ## ⚙️ Setup Procedure
 
 1. Clone the repository.
