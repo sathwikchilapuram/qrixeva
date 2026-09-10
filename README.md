@@ -1,6 +1,6 @@
 # ⚡ Qrixeva
 
-![Next.js](https://img.shields.io/badge/Next.js-Full--Stack-black?logo=next.js) ![TypeScript](https://img.shields.io/badge/TypeScript-Development-blue?logo=typescript) ![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?logo=supabase) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-336791?logo=postgresql) ![Dynamic QR](https://img.shields.io/badge/Dynamic-QR%20Technology-purple) ![Authentication](https://img.shields.io/badge/Authentication-Security-orange) ![Analytics](https://img.shields.io/badge/QR-Analytics-red) ![Vercel](https://img.shields.io/badge/Vercel-Deployment-black?logo=vercel)
+![Next.js](https://img.shields.io/badge/Next.js-Full--Stack-black?logo=next.js) ![TypeScript](https://img.shields.io/badge/TypeScript-Development-blue?logo=typescript) ![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?logo=supabase) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-336791?logo=postgresql) ![Vercel](https://img.shields.io/badge/Vercel-Deployment-black?logo=vercel)
 
 ## 📌 About
 
@@ -37,10 +37,10 @@ Qrixeva combines **QR technology, dynamic content, authentication, cloud storage
 - **QR Code Generation** – Converts user-provided information into scannable QR codes.
 - **Dynamic QR Technology** – Uses short dynamic links that resolve to stored content.
 - **Authentication & Authorization** – Provides secure user accounts and protected resources.
-- **Database Management** – Stores users, QR codes, content and related metadata.
+- **Database Management** – Stores users, QR codes, content, and related metadata.
 - **Cloud Storage** – Handles uploaded documents and digital files.
 - **Analytics Tracking** – Records QR interactions and scan-related information.
-- **Full-Stack Web Development** – Combines frontend, backend logic, database and cloud services.
+- **Full-Stack Web Development** – Combines frontend, backend logic, database, and cloud services.
 
 ## 🔄 Dynamic QR System
 
@@ -58,7 +58,7 @@ This approach keeps QR codes **clean, compact, and easier to manage** while allo
 | TypeScript | Application development |
 | React | User interface |
 | Tailwind CSS | UI styling |
-| Supabase | Authentication, storage and backend services |
+| Supabase | Authentication, storage, and backend services |
 | PostgreSQL | Database |
 | Prisma | Database ORM |
 | Vercel | Deployment |
@@ -106,4 +106,4 @@ GRIET, Hyderabad
 
 ## 📄 License
 
-This project is developed for educational, portfolio, and hackathon purposes.****
+This project is developed for educational, portfolio, and hackathon purposes.
