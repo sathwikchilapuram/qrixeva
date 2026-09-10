@@ -84,6 +84,7 @@ qrixeva/
 ├── supabase_rls_policies.sql  # Database security policies
 ├── tailwind.config.js   # Tailwind CSS configuration
 └── tsconfig.json        # TypeScript configuration
+```
 
 ## ⚙️ Setup Procedure
 
