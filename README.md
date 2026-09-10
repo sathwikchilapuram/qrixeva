@@ -1,169 +1,109 @@
-# Qrixeva
+# ⚡ Qrixeva
 
-### Create. Customize. Connect.
+![Next.js](https://img.shields.io/badge/Next.js-Full--Stack-black?logo=next.js) ![TypeScript](https://img.shields.io/badge/TypeScript-Development-blue?logo=typescript) ![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?logo=supabase) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-336791?logo=postgresql) ![Dynamic QR](https://img.shields.io/badge/Dynamic-QR%20Technology-purple) ![Authentication](https://img.shields.io/badge/Authentication-Security-orange) ![Analytics](https://img.shields.io/badge/QR-Analytics-red) ![Vercel](https://img.shields.io/badge/Vercel-Deployment-black?logo=vercel)
 
-A modern QR platform for creating, customizing, managing and sharing QR codes for different digital experiences.
+## 📌 About
+
+**Qrixeva** is a modern QR code platform that allows users to create, customize, manage, share, and track QR codes through a simple and user-friendly interface.
+
+It supports multiple QR experiences including websites, text, contact information, profiles, resumes, documents, payments, locations, restaurant menus, and other digital content.
+
+Qrixeva combines **QR technology, dynamic content, authentication, cloud storage, database management, and analytics** into one platform.
+
+## 🚀 Key Features
+
+- Create customizable QR codes
+- Static and dynamic QR experiences
+- Digital Profile QR
+- Resume / CV QR
+- Digital ID Card QR
+- Contact / vCard QR
+- Website and URL QR
+- Text, Email, SMS and Wi-Fi QR
+- PDF / File QR
+- Restaurant Menu QR
+- Location Map QR
+- UPI / Payment QR
+- QR download and sharing
+- QR code management dashboard
+- QR analytics and tracking
+- User authentication
+- Secure personal accounts
+- Cloud file storage
+- Mobile-friendly interface
+
+## 🧠 Core Concepts
+
+- **QR Code Generation** – Converts user-provided information into scannable QR codes.
+- **Dynamic QR Technology** – Uses short dynamic links that resolve to stored content.
+- **Authentication & Authorization** – Provides secure user accounts and protected resources.
+- **Database Management** – Stores users, QR codes, content and related metadata.
+- **Cloud Storage** – Handles uploaded documents and digital files.
+- **Analytics Tracking** – Records QR interactions and scan-related information.
+- **Full-Stack Web Development** – Combines frontend, backend logic, database and cloud services.
+
+## 🔄 Dynamic QR System
+
+Qrixeva uses a dynamic QR architecture where the QR code contains a short Qrixeva link instead of storing large content directly.
+
+**User Creates QR → Content is Stored → Unique Dynamic Link is Created → QR Code Encodes the Link → User Scans QR → Qrixeva Resolves the Link → Correct Content is Displayed**
+
+This approach keeps QR codes **clean, compact, and easier to manage** while allowing the underlying content to be updated.
+
+## 🛠️ Technology Stack
+
+| Technology | Purpose |
+|---|---|
+| Next.js | Full-stack web application |
+| TypeScript | Application development |
+| React | User interface |
+| Tailwind CSS | UI styling |
+| Supabase | Authentication, storage and backend services |
+| PostgreSQL | Database |
+| Prisma | Database ORM |
+| Vercel | Deployment |
+
+## ⚙️ Setup Procedure
+
+1. Clone the repository.
+2. Navigate to the Qrixeva project directory.
+3. Install the required dependencies using `npm install`.
+4. Configure the required environment variables using `.env.example`.
+5. Start the development server using `npm run dev`.
+6. Open the application at `http://localhost:3000`.
 
 ## 🌐 Live Demo
 
-**[https://qrixeva.vercel.app/](https://qrixeva.vercel.app/)**
+**Qrixeva:** https://qrixeva.vercel.app/
 
----
+## 🔐 Security
 
-## 📌 About Qrixeva
+Qrixeva is designed with account-level data protection so users can securely manage their own QR codes, files, profiles, and analytics.
 
-Qrixeva is a web application that allows users to create different types of QR codes from one platform.
-
-Whether you need a simple link redirect, an executive resume, a digital business card, a restaurant menu, or dynamic file sharing, Qrixeva provides a unified platform to create, brand, and track your QR codes in real time.
-
-Traditional static QR codes become unchangeable once printed. Qrixeva solves this problem through a dynamic routing system—allowing users to update the destination link, replace content, or upload new files anytime without needing to re-print the physical QR code.
-
----
-
-## ✨ Features
-
-### QR Creation
-- **Multiple QR Types**: Support for URLs, documents, contact details, payment codes, and interactive digital cards.
-- **Type-Specific Fields**: Custom input forms tailored to each QR experience.
-- **Appearance Customization**: Customize foreground colors, background colors, custom gradients, module patterns, eye styles, and scanner frames.
-- **Live Preview & Export**: Preview changes live and download high-resolution PNG or SVG files ready for print or web.
-- **Easy Sharing**: Instant direct link sharing and QR image downloads.
-
-### QR Types
-- 🌐 **URL / Link**: Web links and landing pages.
-- 📝 **Text**: Plain text, notes, and announcements.
-- 📇 **vCard / Contact**: Contact details with instant `.vcf` file download.
-- 📧 **Email**: Pre-filled email messages.
-- 📞 **Phone Call**: Direct phone dialer triggers.
-- 💬 **SMS**: Pre-formatted text messages.
-- 📶 **Wi-Fi**: Instant Wi-Fi network credentials.
-- 💸 **UPI / Payment**: Mobile payment QR codes.
-- 📄 **PDF / File**: Dynamic document sharing and resume presentation.
-- 👤 **Digital Profile**: Interactive personal portfolios and profiles.
-- 📄 **Resume**: Dedicated executive resume showcase.
-- 🪪 **Digital ID**: Digital pass cards and membership credentials.
-- 🍽️ **Restaurant Menu**: Digital food menus categorized by items and pricing.
-- 📅 **Event**: Event schedules and location details.
-
-### Dashboard
-- **My QR Codes**: Manage active QR codes, view scan counts, and update destinations.
-- **Files Workspace**: Upload and host media files and documents attached to QR codes.
-- **Analytics**: View scan activity, device breakdown, browser types, and timestamp logs.
-- **Profile & Settings**: Manage account credentials and user profile information.
-
-### Dynamic QR
-Dynamic QR codes route through Qrixeva's edge resolver (`/x/[slug]`), enabling destination URLs and attached files to be updated at any time from the user dashboard without altering the printed QR pattern.
-
----
-
-## 🔄 How It Works
-
-```text
-1. Create an account
-        ↓
-2. Choose a QR type
-        ↓
-3. Enter the required information
-        ↓
-4. Customize the QR code
-        ↓
-5. Generate the QR code
-        ↓
-6. Scan, download or share it
-        ↓
-7. Manage it from the dashboard
-```
-
----
-
-## 👤 Personal Account
-
-Each user has their own dedicated Qrixeva account and personal dashboard. User data is kept strictly isolated using **Supabase Auth** and **PostgreSQL Row Level Security (RLS)**, ensuring that every user's QR codes, uploaded files, profiles, digital IDs, and scan analytics remain private to their account.
-
----
-
-## 🛠️ Built With
-
-| Technology | Purpose |
-| :--- | :--- |
-| **Next.js** | Web application framework |
-| **React** | User interface library |
-| **TypeScript** | Application development |
-| **Supabase** | Backend engine, authentication & file storage |
-| **PostgreSQL** | Relational database |
-| **Prisma** | Database ORM |
-| **Vercel** | Web deployment & hosting |
-
----
-
-## 📁 Project Structure
-
-```text
-Qrixeva/
-├── frontend/             # Next.js Web App (UI, App Router, Components, Assets)
-│   ├── public/           # Logos, favicons, web icons
-│   ├── src/              # Application source code
-│   │   ├── app/          # App Router pages and API routes
-│   │   ├── components/   # UI components (branding, layout, qr, ui)
-│   │   ├── lib/          # Business logic, auth, db client, phone normalization
-│   │   └── types/        # TypeScript interfaces and data models
-│   ├── next.config.js    # Next.js configuration
-│   ├── package.json      # Frontend package configuration
-│   └── tsconfig.json     # TypeScript configuration
-├── backend/              # Database Schema, Prisma Engine, RLS Policies
-│   ├── prisma/           # PostgreSQL Prisma database schema (schema.prisma)
-│   ├── scripts/          # Asset generation scripts
-│   ├── DEPLOYMENT.md     # Production deployment documentation
-│   └── supabase_rls_policies.sql # PostgreSQL RLS policies
-├── .env.example          # Environment variable template
-├── .gitignore            # Git ignore rules for build outputs & local secrets
-├── package.json          # Root workspace configuration
-├── vercel.json           # Vercel deployment configuration
-└── README.md             # Portfolio-ready project documentation
-```
-
----
-
-## 🚀 Run Locally
-
-### 1. Clone & Install
-
-```bash
-git clone https://github.com/sathwikchilapuram/qrixeva.git
-cd qrixeva
-npm install
-```
-
-### 2. Environment Configuration
-
-Create a `.env.local` file in `frontend/` (or root) and add the required environment variables (see `.env.example` for details):
-
-```env
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-DATABASE_URL="postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:6543/postgres?pgbouncer=true"
-DIRECT_URL="postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres"
-NEXT_PUBLIC_SUPABASE_URL="https://[PROJECT-REF].supabase.co"
-NEXT_PUBLIC_SUPABASE_ANON_KEY="your-supabase-anon-key"
-```
-
-### 3. Start Development Server
-
-```bash
-npm run dev
-```
-
-Open `http://localhost:3000` in your web browser.
-
----
-
-## ☁️ Deployment
-
-Qrixeva is deployed using Vercel.
-
-Live website: **[https://qrixeva.vercel.app/](https://qrixeva.vercel.app/)**
-
----
+Authentication and database authorization are used to prevent users from accessing another user's private data.
 
 ## 🎯 Project Goal
 
-The goal of Qrixeva is to provide one simple platform where users can create, customize and manage different QR-based digital experiences.
+The goal of Qrixeva is to provide a **simple, scalable, and feature-rich QR platform** that makes it easy for individuals and businesses to create and manage digital experiences through QR codes.
+
+## 🔮 Future Improvements
+
+- Advanced QR analytics
+- More dynamic QR types
+- Subscription and payment system
+- AI-powered QR creation assistant
+- Advanced customization
+- QR campaign management
+- Improved business features
+- Expanded integrations
+
+## 👨‍💻 Author
+
+**Sathwik Chilapuram**
+
+Computer Science & Engineering  
+GRIET, Hyderabad
+
+## 📄 License
+
+This project is developed for educational, portfolio, and hackathon purposes.****
